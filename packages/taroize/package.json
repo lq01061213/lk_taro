@@ -53,7 +53,7 @@
   "dependencies": {
     "@babel/code-frame": "^7.21.4",
     "@babel/generator": "^7.21.4",
-    "@babel/parser": "^7.23.0",
+    "@babel/parser": "^7.24.1",
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/plugin-syntax-flow": "^7.22.5",
     "@babel/preset-typescript": "^7.14.5",
