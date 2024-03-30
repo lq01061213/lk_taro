@@ -32,7 +32,7 @@
     "jimp": "^0.22.4",
     "jsqr": "^1.4.0",
     "minimist": "^1.2.5",
-    "miniprogram-ci": "^1.8.35",
+    "miniprogram-ci": "^1.9.15",
     "qrcode": "^1.5.1",
     "shelljs": "^0.8.4"
   },
