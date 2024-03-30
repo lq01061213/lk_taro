@@ -2,7 +2,7 @@ import * as FileSystem from 'expo-file-system'
 import { Platform } from 'react-native'
 import { shouldBeObject, successHandler, errorHandler } from '../utils'
 
-interface Func{
+interface Func {
   (arg: any): void
 }
 
@@ -12,7 +12,7 @@ interface ExtPromise<T> extends Promise<T> {
   abort?: Func
 }
 
-let timer: any
+let timer: ReturnType<typeof setTimeout>
 
 const _fetch = (requestPromise, timeout) => {
   let timeoutAction

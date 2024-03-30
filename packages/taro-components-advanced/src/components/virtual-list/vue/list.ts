@@ -1,4 +1,4 @@
-import { isWebPlatform } from '@tarojs/shared'
+import { isNumber } from '@tarojs/shared'
 import memoizeOne from 'memoize-one'
 import { defineComponent } from 'vue'
 
@@ -7,8 +7,6 @@ import render from '../../../utils/vue-render'
 import { IS_SCROLLING_DEBOUNCE_INTERVAL } from '../constants'
 import { getRTLOffsetType } from '../dom-helpers'
 import Preset, { type IProps } from '../preset'
-
-const isWeb = isWebPlatform()
 
 export default defineComponent({
   props: {
@@ -36,6 +34,10 @@ export default defineComponent({
     itemSize: {
       type: [Number, Function],
       required: true
+    },
+    queryPrefix: {
+      type: String,
+      default: ''
     },
     unlimitedSize: {
       type: Boolean,
@@ -78,15 +80,15 @@ export default defineComponent({
     },
     outerElementType: {
       type: String,
-      default: isWeb ? 'taro-scroll-view-core' : 'scroll-view'
+      default: process.env.TARO_PLATFORM === 'web' ? 'taro-scroll-view-core' : 'scroll-view'
     },
     innerElementType: {
       type: String,
-      default: isWeb ? 'taro-view-core' : 'view'
+      default: process.env.TARO_PLATFORM === 'web' ? 'taro-view-core' : 'view'
     },
     itemElementType: {
       type: String,
-      default: isWeb ? 'taro-view-core' : 'view'
+      default: process.env.TARO_PLATFORM === 'web' ? 'taro-view-core' : 'view'
     },
     outerTagName: String,
     innerTagName: String,
@@ -135,7 +137,7 @@ export default defineComponent({
         } else {
           option.top = scrollOffset
         }
-        return getScrollViewContextNode(`#${this.preset.id}`).then((node: any) => node.scrollTo(option))
+        return getScrollViewContextNode(`${this.$props.queryPrefix}#${this.preset.id}`).then((node: any) => node.scrollTo(option))
       }
 
       this.scrollDirection = this.scrollOffset < scrollOffset ? 'forward' : 'backward'
@@ -211,7 +213,7 @@ export default defineComponent({
       return new Promise((resolve) => {
         if (index >= 0 && index < this.$props.itemCount) {
           const times = this.itemList.compareSize(index) ? 0 : 2
-          getRectSizeSync(`#${this.preset.id}-${index}`, 100, times).then(({ width, height }) => {
+          getRectSizeSync(`${this.$props.queryPrefix}#${this.preset.id}-${index}`, 100, times).then(({ width, height }) => {
             const size = isHorizontal ? width : height
             if (typeof size === 'number' && size > 0 && !this.itemList.compareSize(index, size)) {
               this.itemList.setSize(index, size)
@@ -237,6 +239,7 @@ export default defineComponent({
         scrollTop,
         scrollLeft,
       } = event.currentTarget
+      if (!isNumber(scrollHeight) || !isNumber(scrollWidth)) return
       const clientWidth = this.itemList.wrapperSize
       this.preset.field = {
         scrollHeight,
@@ -292,6 +295,7 @@ export default defineComponent({
         scrollTop,
         scrollLeft,
       } = event.currentTarget
+      if (!isNumber(scrollHeight) || !isNumber(scrollWidth)) return
       const clientHeight = this.itemList.wrapperSize
       if (this.$props.onScrollNative) {
         this.$props.onScrollNative(event)
