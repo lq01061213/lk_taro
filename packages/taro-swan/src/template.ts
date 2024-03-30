@@ -6,7 +6,6 @@ const REG_TRACKBY_REPLACEMENT = /s-for="{{([A-Za-z]+)\.cn}}" s-key="sid"/
 const swanSpecialAttrs = {
   'scroll-view': ['scroll-top', 'scroll-left', 'scroll-into-view'],
   'movable-view': ['x', 'y'],
-  slider: ['value'],
   input: ['value'],
   textarea: ['value']
 }
@@ -19,6 +18,7 @@ interface TemplateOptions {
 
 export class Template extends RecursiveTemplate {
   supportXS = true
+  isXMLSupportRecursiveReference = false
 
   Adapter = {
     if: 's-if',
@@ -59,12 +59,13 @@ export class Template extends RecursiveTemplate {
 
     delete result['pure-view']
     delete result['static-view']
+    delete result['catch-view']
 
     return result
   }
 
-  buildXsTemplate () {
-    return '<import-sjs module="xs" src="./utils.sjs" />'
+  buildXsTemplate (filePath = './utils') {
+    return `<import-sjs module="xs" src="${filePath}.sjs" />`
   }
 
   dataKeymap (keymap: string) {

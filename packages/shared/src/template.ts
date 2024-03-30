@@ -87,6 +87,7 @@ export class BaseTemplate {
   protected modifyTemplateResult?: (res: string, nodeName: string, level: number, children: string) => string
   protected modifyThirdPartyLoopBody?: (child: string, nodeName: string) => string
   public supportXS = false
+  public isXMLSupportRecursiveReference = true
   public Adapter = weixinAdapter
   /** 组件列表 */
   public internalComponents = internalComponents
@@ -117,7 +118,7 @@ export class BaseTemplate {
     return name
   }
 
-  protected createMiniComponents (components: Components) {
+  public createMiniComponents (components: Components) {
     const result: Components = Object.create(null)
 
     for (const key in components) {
@@ -209,7 +210,7 @@ export class BaseTemplate {
           result[compName] = {
             name: newComp?.name,
           }
-        }  else {
+        } else {
           result[compName] = newComp
         }
       }
@@ -221,13 +222,13 @@ export class BaseTemplate {
   protected buildBaseTemplate () {
     const Adapter = this.Adapter
     const data = !this.isSupportRecursive && this.supportXS
-      ? `${this.dataKeymap('i:item,c:1,l:\'\'')}`
+      ? `${this.dataKeymap(`i:item,c:1,l:xs.f('',item.${Shortcuts.NodeName})`)}`
       : this.isSupportRecursive
         ? this.dataKeymap('i:item')
         : this.dataKeymap('i:item,c:1')
     const xs = this.supportXS
       ? (this.isSupportRecursive
-        ? `xs.a(0, item.${Shortcuts.NodeName})` 
+        ? `xs.a(0, item.${Shortcuts.NodeName})`
         : `xs.a(0, item.${Shortcuts.NodeName}, '')`)
       : "'tmpl_0_' + item.nn"
     return `${this.buildXsTemplate()}
@@ -247,9 +248,9 @@ export class BaseTemplate {
         if (value.indexOf('-') > -1) {
           value = `:${value}`
         }
-        return str + `bind${value}="eh" `
+        return str + ` bind${value}="eh"`
       } else if (attr.startsWith('bind')) {
-        return str + `${attr}="eh" `
+        return str + ` ${attr}="eh"`
       } else if (attr.startsWith('on')) {
         // react, vue3
         let value = toKebabCase(attr.slice(2))
@@ -257,11 +258,11 @@ export class BaseTemplate {
           // 兼容如 vant 某些组件的 bind:a-b 这类属性
           value = `:${value}`
         }
-        return str + `bind${value}="eh" `
+        return str + ` bind${value}="eh"`
       } else if (attr === 'class') {
-        return str + `class="{{i.${Shortcuts.Class}}}" `
+        return str + ` class="{{i.${Shortcuts.Class}}}"`
       } else if (attr === 'style') {
-        return str + `style="{{i.${Shortcuts.Style}}}" `
+        return str + ` style="{{i.${Shortcuts.Style}}}"`
       }
 
       const patchValue = patcher[attr]
@@ -269,9 +270,9 @@ export class BaseTemplate {
         const propValue = this.supportXS
           ? `xs.b(i.${toCamelCase(attr)},${patchValue})`
           : `i.${toCamelCase(attr)}===undefined?${patchValue}:i.${toCamelCase(attr)}`
-        return str + `${attr}="{{${propValue}}}" `
+        return str + ` ${attr}="{{${propValue}}}"`
       }
-      return str + `${attr}="{{i.${toCamelCase(attr)}}}" `
+      return str + ` ${attr}="{{i.${toCamelCase(attr)}}}"`
     }, '')
   }
 
@@ -285,7 +286,7 @@ export class BaseTemplate {
     const { isSupportRecursive, supportXS } = this
     const isLastRecursiveComp = !isSupportRecursive && level + 1 === this.baseLevel
     const isUseXs = !this.isSupportRecursive && this.supportXS
-  
+
     if (isLastRecursiveComp) {
       const data = isUseXs
         ? `${this.dataKeymap('i:item,c:c,l:l')}`
@@ -298,6 +299,8 @@ export class BaseTemplate {
         : `<template is="tmpl_${level}_${Shortcuts.Container}" data="{{${data}}}" />`
     } else {
       const data = isUseXs
+        // TODO: 此处直接 c+1，不是最优解，变量 c 的作用是监测组件嵌套的层级是否大于 baselevel
+        // 但目前的监测方法用于所有组件嵌套的总和，应该分开组件计算，单个组件嵌套层级大于 baselevel 时，再进入 comp 组件中进行新的嵌套
         ? `${this.dataKeymap(`i:item,c:c+1,l:xs.f(l,item.${Shortcuts.NodeName})`)}`
         : this.isSupportRecursive
           ? `${this.dataKeymap('i:item')}`
@@ -309,19 +312,19 @@ export class BaseTemplate {
 
       return supportXS
         ? `<template is="{{${xs}}}" data="{{${data}}}" />`
-        : isSupportRecursive 
+        : isSupportRecursive
           ? `<template is="{{'tmpl_0_' + item.nn}}" data="{{${data}}}" />`
           : `<template is="{{'tmpl_' + c + '_' + item.nn}}" data="{{${data}}}" />`
     }
-  
+
   }
 
   private getChildren (comp: Component, level: number): string {
     const { isSupportRecursive, Adapter } = this
     const nextLevel = isSupportRecursive ? 0 : level + 1
-  
+
     let child = this.getChildrenTemplate(nextLevel)
-  
+
     if (isFunction(this.modifyLoopBody)) {
       child = this.modifyLoopBody(child, comp.nodeName)
     }
@@ -441,13 +444,17 @@ export class BaseTemplate {
           child = this.modifyThirdPartyLoopBody(child, compName)
         }
 
-        template += `
-<template name="tmpl_${level}_${compName}">
-  <${compName} ${this.buildThirdPartyAttr(attrs, this.thirdPartyPatcher[compName] || {})} id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+        const children = this.voidElements.has(compName)
+          ? ''
+          : `
     <block ${Adapter.for}="{{i.${Shortcuts.Childnodes}}}" ${Adapter.key}="sid">
       ${child}
     </block>
-  </${compName}>
+  `
+
+        template += `
+<template name="tmpl_${level}_${compName}">
+  <${compName} ${this.buildThirdPartyAttr(attrs, this.thirdPartyPatcher[compName] || {})} id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">${children}</${compName}>
 </template>
   `
       }
@@ -458,8 +465,8 @@ export class BaseTemplate {
 
   // 最后一层的 comp 需要引用 container 进行重新的模版循环，其他情况不需要 container
   protected buildContainerTemplate (level: number) {
-    const tmpl = `<block ${this.Adapter.if}="{{i.nn === '#text'}}">
-    <template is="tmpl_0_#text" data="{{${this.dataKeymap('i:i')}}}" />
+    const tmpl = `<block ${this.Adapter.if}="{{i.nn === '${this.componentsAlias['#text']._num}'}}">
+    <template is="tmpl_0_${this.componentsAlias['#text']._num}" data="{{${this.dataKeymap('i:i')}}}" />
   </block>
   <block ${this.Adapter.else}>
     ${!this.isSupportRecursive && this.supportXS ? '<comp i="{{i}}" l="{{l}}" />' : '<comp i="{{i}}" />'}
@@ -484,11 +491,11 @@ export class BaseTemplate {
     return `{${value}}`
   }
 
-  protected buildXsTemplate () {
+  public buildXsTemplate (_filePath?: string) {
     return ''
   }
 
-  public buildPageTemplate = (baseTempPath: string) => {
+  public buildPageTemplate = (baseTempPath: string, _page: { content: Record<string, any>, path: string }) => {
     const template = `<import src="${baseTempPath}"/>
 <template is="taro_tmpl" data="{{${this.dataKeymap('root:root')}}}" />`
 
@@ -497,24 +504,28 @@ export class BaseTemplate {
 
   public buildBaseComponentTemplate = (ext: string) => {
     const data = !this.isSupportRecursive && this.supportXS
-      ? this.dataKeymap('i:i,c:1,l:l')
+      ? this.dataKeymap(`i:i,c:1,l:xs.f('',i.${Shortcuts.NodeName})`)
       : this.isSupportRecursive
         ? this.dataKeymap('i:i')
         : this.dataKeymap('i:i,c:1')
 
+    // 此处需要重新引入 xs 函数，否则会出现 ws.f() 在 comp.wxml 和 custom-wrapper.wxml 中永远返回 undefined 的问题 #14599
     return `<import src="./base${ext}" />
+${this.buildXsTemplate()}
 <template is="{{'tmpl_0_' + i.nn}}" data="{{${data}}}" />`
   }
 
   public buildCustomComponentTemplate = (ext: string) => {
     const Adapter = this.Adapter
     const data = !this.isSupportRecursive && this.supportXS
-      ? `${this.dataKeymap('i:item,c:1,l:\'\'')}`
+      ? `${this.dataKeymap(`i:item,c:1,l:xs.f('',item.${Shortcuts.NodeName})`)}`
       : this.isSupportRecursive
         ? this.dataKeymap('i:item')
         : this.dataKeymap('i:item,c:1')
 
+    // 此处需要重新引入 xs 函数，否则会出现 ws.f() 在 comp.wxml 和 custom-wrapper.wxml 中永远返回 undefined 的问题 #14599
     return `<import src="./base${ext}" />
+  ${this.buildXsTemplate()}
   <block ${Adapter.for}="{{i.${Shortcuts.Childnodes}}}" ${Adapter.key}="sid">
     <template is="{{'tmpl_0_' + item.nn}}" data="{{${data}}}" />
   </block>`
@@ -670,7 +681,9 @@ export class UnRecursiveTemplate extends BaseTemplate {
     const componentsAlias = this.componentsAlias
     const listA = Array.from(isLoopCompsSet).map(item => componentsAlias[item]?._num || item)
     const listB = hasMaxComps.map(item => componentsAlias[item]?._num || item)
+    const containerLevel = this.baseLevel - 1
 
+    // l >= containerLevel 是为了避免 baselevel 倒数两三层几层组件恰好不是 listA 中的组件，而最后一个组件又刚好是 listA 的组件，导致出现 l >= baselevel 却没有走入新的嵌套循环的问题 #14883
     return `function (l, n, s) {
     var a = ${JSON.stringify(listA)}
     var b = ${JSON.stringify(listB)}
@@ -684,6 +697,9 @@ export class UnRecursiveTemplate extends BaseTemplate {
         if (u[i] === n) depth++
       }
       l = depth
+    }
+    if (l >= ${containerLevel}) {
+      return 'tmpl_${containerLevel}_${Shortcuts.Container}'
     }
     return 'tmpl_' + l + '_' + n
   }`
