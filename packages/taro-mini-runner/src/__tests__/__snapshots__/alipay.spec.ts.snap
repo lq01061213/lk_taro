@@ -37,8 +37,8 @@ require("./taro");
         function isFunction() {}
         function isArray() {}
         function processApis() {}
-        var EMPTY_OBJ = {};
-        var hooks = {};
+        const EMPTY_OBJ = {};
+        const hooks = {};
         function setReconciler() {}
         function connectReactPage() {}
         function createReactApp() {}
@@ -46,7 +46,7 @@ require("./taro");
         function connectVuePage() {}
         function createVueApp() {}
         function createVue3App() {}
-        var setGlobalDataPlugin = {};
+        const setGlobalDataPlugin = {};
         function useDidHide() {}
         function useDidShow() {}
         function useError() {}
@@ -74,8 +74,8 @@ require("./taro");
         "use strict";
         (function(navigator) {
             var _tarojs_shared__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-            var needPromiseApis = new Set([ "addCardAuth", "getOpenUserInfo", "chooseAlipayContact", "chooseCity", "chooseContact", "choosePhoneContact", "datePicker", "getAddress", "getAuthCode", "getPhoneNumber", "getRunData", "getRunScene", "getServerTime", "getTitleColor", "rsa", "paySignCenter", "tradePay", "isCollected", "multiLevelSelect", "onLocatedComplete", "optionsSelect", "prompt", "regionPicker", "setLocatedCity", "showAuthGuide", "textRiskIdentification", "vibrate", "watchShake", "connectBLEDevice", "disconnectBLEDevice", "makeBluetoothPair", "writeBLECharacteristicValue", "readBLECharacteristicValue", "notifyBLECharacteristicValueChange", "getBLEDeviceServices", "getBLEDeviceCharacteristics", "openBluetoothAdapter", "closeBluetoothAdapter", "getBluetoothAdapterState", "startBluetoothDevicesDiscovery", "stopBluetoothDevicesDiscovery", "getBluetoothDevices", "getConnectedBluetoothDevices" ]);
-            var apiDiff = {
+            const needPromiseApis = new Set([ "addCardAuth", "getOpenUserInfo", "chooseAlipayContact", "chooseCity", "chooseContact", "choosePhoneContact", "datePicker", "getAddress", "getAuthCode", "getPhoneNumber", "getRunData", "getRunScene", "getServerTime", "getTitleColor", "rsa", "paySignCenter", "tradePay", "isCollected", "multiLevelSelect", "onLocatedComplete", "optionsSelect", "prompt", "regionPicker", "setLocatedCity", "showAuthGuide", "textRiskIdentification", "vibrate", "watchShake", "connectBLEDevice", "disconnectBLEDevice", "makeBluetoothPair", "writeBLECharacteristicValue", "readBLECharacteristicValue", "notifyBLECharacteristicValueChange", "getBLEDeviceServices", "getBLEDeviceCharacteristics", "openBluetoothAdapter", "closeBluetoothAdapter", "getBluetoothAdapterState", "startBluetoothDevicesDiscovery", "stopBluetoothDevicesDiscovery", "getBluetoothDevices", "getConnectedBluetoothDevices" ]);
+            const apiDiff = {
                 login: {
                     alias: "getAuthCode",
                     options: {
@@ -104,7 +104,7 @@ require("./taro");
                         } ],
                         set: [ {
                             key: "type",
-                            value: function value(options) {
+                            value(options) {
                                 if (options.type === "error") {
                                     return "fail";
                                 }
@@ -149,7 +149,7 @@ require("./taro");
                     options: {
                         set: [ {
                             key: "current",
-                            value: function value(options) {
+                            value(options) {
                                 return options.urls.indexOf(options.current || options.urls[0]);
                             }
                         } ]
@@ -191,12 +191,12 @@ require("./taro");
                     options: {
                         set: [ {
                             key: "latitude",
-                            value: function value(options) {
+                            value(options) {
                                 return String(options.latitude);
                             }
                         }, {
                             key: "longitude",
-                            value: function value(options) {
+                            value(options) {
                                 return String(options.longitude);
                             }
                         } ]
@@ -239,7 +239,7 @@ require("./taro");
                         } ],
                         set: [ {
                             key: "type",
-                            value: function value(options) {
+                            value(options) {
                                 return options.scanType && options.scanType[0].slice(0, -4) || "qr";
                             }
                         } ]
@@ -266,12 +266,12 @@ require("./taro");
                     alias: "disconnectBLEDevice"
                 }
             };
-            var asyncResultApiDiff = {
+            const asyncResultApiDiff = {
                 alert: {
                     res: {
                         set: [ {
                             key: "confirm",
-                            value: function value(res) {
+                            value(res) {
                                 return res.success;
                             }
                         } ]
@@ -281,7 +281,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "value",
-                            value: function value(res) {
+                            value(res) {
                                 return res.brightness;
                             }
                         } ],
@@ -292,7 +292,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "result",
-                            value: function value(res) {
+                            value(res) {
                                 return res.code;
                             }
                         } ]
@@ -302,7 +302,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "data",
-                            value: function value(res) {
+                            value(res) {
                                 return res.text;
                             }
                         } ]
@@ -312,7 +312,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "tempFilePaths",
-                            value: function value(res) {
+                            value(res) {
                                 return res.apFilePaths;
                             }
                         } ]
@@ -322,7 +322,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "tempFilePath",
-                            value: function value(res) {
+                            value(res) {
                                 return res.apFilePath;
                             }
                         } ]
@@ -332,7 +332,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "code",
-                            value: function value(res) {
+                            value(res) {
                                 return res.authCode;
                             }
                         } ]
@@ -342,7 +342,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "extConfig",
-                            value: function value(res) {
+                            value(res) {
                                 return res.data;
                             }
                         } ]
@@ -352,7 +352,7 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "savedFilePath",
-                            value: function value(res) {
+                            value(res) {
                                 return res.apFilePath;
                             }
                         } ]
@@ -362,12 +362,10 @@ require("./taro");
                     res: {
                         set: [ {
                             key: "services",
-                            value: function value(res) {
-                                return res.services.map((function(item) {
-                                    return {
-                                        uuid: item.serviceId,
-                                        isPrimary: item.isPrimary
-                                    };
+                            value(res) {
+                                return res.services.map(item => ({
+                                    uuid: item.serviceId,
+                                    isPrimary: item.isPrimary
                                 }));
                             }
                         } ]
@@ -381,23 +379,23 @@ require("./taro");
                         url: options
                     };
                 }
-                var defaultHeaders = {
+                const defaultHeaders = {
                     "content-type": "application/json"
                 };
                 options.headers = defaultHeaders;
                 if (options.header) {
-                    for (var k in options.header) {
-                        var lowerK = k.toLocaleLowerCase();
+                    for (const k in options.header) {
+                        const lowerK = k.toLocaleLowerCase();
                         options.headers[lowerK] = options.header[k];
                     }
                     delete options.header;
                 }
-                var originSuccess = options.success;
-                var originFail = options.fail;
-                var originComplete = options.complete;
-                var requestTask;
-                var p = new Promise((function(resolve, reject) {
-                    options.success = function(res) {
+                const originSuccess = options.success;
+                const originFail = options.fail;
+                const originComplete = options.complete;
+                let requestTask;
+                const p = new Promise((resolve, reject) => {
+                    options.success = res => {
                         res.statusCode = res.status;
                         delete res.status;
                         res.header = res.headers;
@@ -405,17 +403,17 @@ require("./taro");
                         originSuccess && originSuccess(res);
                         resolve(res);
                     };
-                    options.fail = function(res) {
+                    options.fail = res => {
                         originFail && originFail(res);
                         reject(res);
                     };
-                    options.complete = function(res) {
+                    options.complete = res => {
                         originComplete && originComplete(res);
                     };
-                    var nativeRequest = my.canIUse("request") ? my.request : my.httpRequest;
+                    const nativeRequest = my.canIUse("request") ? my.request : my.httpRequest;
                     requestTask = nativeRequest(options);
-                }));
-                p.abort = function(cb) {
+                });
+                p.abort = cb => {
                     cb && cb();
                     if (requestTask) {
                         requestTask.abort();
@@ -426,12 +424,12 @@ require("./taro");
             }
             function handleSyncApis(key, global, args) {
                 if (key === "getStorageSync") {
-                    var arg1 = args[0];
+                    const arg1 = args[0];
                     if (arg1 != null) {
-                        var res = global[key]({
+                        const res = global[key]({
                             key: arg1
                         });
-                        var data = null;
+                        let data = null;
                         if (res.hasOwnProperty("data")) {
                             data = res.data;
                         } else if (res.hasOwnProperty("APDataStorage")) {
@@ -442,27 +440,27 @@ require("./taro");
                     return console.error("getStorageSync \\u4f20\\u5165\\u53c2\\u6570\\u9519\\u8bef");
                 }
                 if (key === "setStorageSync") {
-                    var _arg = args[0];
-                    var arg2 = args[1];
-                    if (_arg != null) {
+                    const arg1 = args[0];
+                    const arg2 = args[1];
+                    if (arg1 != null) {
                         return global[key]({
-                            key: _arg,
+                            key: arg1,
                             data: arg2
                         });
                     }
                     return console.error("setStorageSync \\u4f20\\u5165\\u53c2\\u6570\\u9519\\u8bef");
                 }
                 if (key === "removeStorageSync") {
-                    var _arg2 = args[0];
-                    if (_arg2 != null) {
+                    const arg1 = args[0];
+                    if (arg1 != null) {
                         return global[key]({
-                            key: _arg2
+                            key: arg1
                         });
                     }
                     return console.error("removeStorageSync \\u4f20\\u5165\\u53c2\\u6570\\u9519\\u8bef");
                 }
                 if (key === "createSelectorQuery") {
-                    var query = global[key]();
+                    const query = global[key]();
                     query.in = function() {
                         return query;
                     };
@@ -471,7 +469,7 @@ require("./taro");
                 return global[key].apply(global, args);
             }
             function transformMeta(api, options) {
-                var apiAlias = api;
+                let apiAlias = api;
                 if (api === "showModal") {
                     options.cancelButtonText = options.cancelText || "\\u53d6\\u6d88";
                     options.confirmButtonText = options.confirmText || "\\u786e\\u5b9a";
@@ -481,28 +479,28 @@ require("./taro");
                         apiAlias = "alert";
                     }
                 } else {
-                    Object.keys(apiDiff).forEach((function(item) {
-                        var apiItem = apiDiff[item];
+                    Object.keys(apiDiff).forEach(item => {
+                        const apiItem = apiDiff[item];
                         if (api === item) {
                             if (apiItem.alias) {
                                 apiAlias = apiItem.alias;
                             }
                             if (apiItem.options) {
-                                var change = apiItem.options.change;
-                                var set = apiItem.options.set;
+                                const change = apiItem.options.change;
+                                const set = apiItem.options.set;
                                 if (change) {
-                                    change.forEach((function(changeItem) {
+                                    change.forEach(changeItem => {
                                         options[changeItem.new] = options[changeItem.old];
-                                    }));
+                                    });
                                 }
                                 if (set) {
-                                    set.forEach((function(setItem) {
+                                    set.forEach(setItem => {
                                         options[setItem.key] = typeof setItem.value === "function" ? setItem.value(options) : setItem.value;
-                                    }));
+                                    });
                                 }
                             }
                         }
-                    }));
+                    });
                 }
                 return {
                     key: apiAlias,
@@ -510,11 +508,11 @@ require("./taro");
                 };
             }
             function modifyApis(apis) {
-                Object.keys(apiDiff).map((function(key) {
+                Object.keys(apiDiff).map(key => {
                     apis.add(key);
-                    var platformKey = apiDiff[key].alias;
+                    const platformKey = apiDiff[key].alias;
                     platformKey && apis.delete(platformKey);
-                }));
+                });
                 apis.add("showModal");
                 apis.delete("confirm");
                 apis.delete("alert");
@@ -540,27 +538,27 @@ require("./taro");
                         my.closeSocket();
                     };
                 }
-                Object.keys(asyncResultApiDiff).forEach((function(apiKey) {
-                    var apiItem = asyncResultApiDiff[apiKey];
+                Object.keys(asyncResultApiDiff).forEach(apiKey => {
+                    const apiItem = asyncResultApiDiff[apiKey];
                     if (key !== apiKey) {
                         return;
                     }
                     if (!apiItem.res) {
                         return;
                     }
-                    var set = apiItem.res.set;
-                    var remove = apiItem.res.remove;
+                    const set = apiItem.res.set;
+                    const remove = apiItem.res.remove;
                     if (set) {
-                        set.forEach((function(setItem) {
+                        set.forEach(setItem => {
                             res[setItem.key] = typeof setItem.value === "function" ? setItem.value(res) : setItem.value;
-                        }));
+                        });
                     }
                     if (remove) {
-                        remove.forEach((function(removeItem) {
+                        remove.forEach(removeItem => {
                             delete res[removeItem];
-                        }));
+                        });
                     }
-                }));
+                });
             }
             function initNativeApi(taro) {
                 Object(_tarojs_shared__WEBPACK_IMPORTED_MODULE_0__["e"])(taro, my, {
@@ -572,7 +570,7 @@ require("./taro");
                     request: request
                 });
             }
-            var components = {
+            const components = {
                 View: {
                     "disable-scroll": "false",
                     hidden: "false",
@@ -673,7 +671,9 @@ require("./taro");
                 },
                 Video: {
                     "poster-size": Object(_tarojs_shared__WEBPACK_IMPORTED_MODULE_0__["singleQuote"])("contain"),
+                    "show-thin-progress-bar": "false",
                     "mobilenet-hint-type": "1",
+                    "floating-mode": Object(_tarojs_shared__WEBPACK_IMPORTED_MODULE_0__["singleQuote"])("none"),
                     enableNative: "true",
                     bindLoading: "",
                     bindUserAction: "",
@@ -754,36 +754,78 @@ require("./taro");
                     transform: "false",
                     duration: "300",
                     "easing-function": Object(_tarojs_shared__WEBPACK_IMPORTED_MODULE_0__["singleQuote"])("ease-out")
+                },
+                RootPortal: {
+                    enable: "true"
+                },
+                PageMeta: {
+                    "background-color": "",
+                    "background-color-top": "",
+                    "background-color-bottom": "",
+                    "root-background-color": "",
+                    "scroll-top": "''",
+                    "scroll-duration": "300",
+                    "page-style": "''",
+                    "root-font-size": "''",
+                    "page-font-size": "''",
+                    bindScroll: ""
                 }
             };
-            var BUBBLE_EVENTS = new Set([ "touchStart", "touchMove", "touchEnd", "touchCancel", "tap", "longTap" ]);
-            var hostConfig = {
+            const BUBBLE_EVENTS = new Set([ "touchStart", "touchMove", "touchEnd", "touchCancel", "tap", "longTap" ]);
+            const hostConfig = {
                 initNativeApi: initNativeApi,
-                getMiniLifecycle: function getMiniLifecycle(config) {
+                getMiniLifecycle(config) {
                     config.component[0] = "didMount";
                     config.component[1] = "didUnmount";
                     return config;
                 },
-                getEventCenter: function getEventCenter(Events) {
+                getEventCenter(Events) {
                     if (!my.taroEventCenter) {
                         my.taroEventCenter = new Events;
                     }
                     return my.taroEventCenter;
                 },
-                modifyTaroEvent: function modifyTaroEvent(event, node) {
+                modifyTaroEvent(event, node) {
                     if (node.tagName === "SWIPER" && event.type === "animationend") {
                         event.type = "animationfinish";
                     }
                 },
-                isBubbleEvents: function isBubbleEvents(eventName) {
+                isBubbleEvents(eventName) {
                     return BUBBLE_EVENTS.has(eventName);
+                },
+                transferHydrateData(data, element, componentsAlias) {
+                    var _a;
+                    if (element.isTransferElement) {
+                        const pages = getCurrentPages();
+                        const page = pages[pages.length - 1];
+                        data["nn"] = element.dataName;
+                        page.setData({
+                            [Object(_tarojs_shared__WEBPACK_IMPORTED_MODULE_0__["toCamelCase"])(data.nn)]: data
+                        });
+                        return {
+                            sid: element.sid,
+                            ["v"]: "",
+                            ["nn"]: ((_a = componentsAlias["#text"]) === null || _a === void 0 ? void 0 : _a._num) || "8"
+                        };
+                    }
+                },
+                modifyRecursiveComponentConfig(componentConfig, {isCustomWrapper: isCustomWrapper}) {
+                    return isCustomWrapper ? Object.assign(Object.assign({}, componentConfig), {
+                        deriveDataFromProps(nextProps) {
+                            if (this.data.i !== undefined && this.props.i !== nextProps.i) {
+                                this.setData({
+                                    i: nextProps.i
+                                });
+                            }
+                        }
+                    }) : componentConfig;
                 }
             };
-            var _navigator = navigator, userAgent = _navigator.userAgent;
+            const {userAgent: userAgent} = navigator;
             Object.defineProperty(navigator, "userAgent", {
                 configurable: true,
                 enumerable: true,
-                get: function get() {
+                get() {
                     return userAgent || navigator.swuserAgent || "";
                 }
             });
@@ -828,7 +870,7 @@ require("./taro");
             } ]);
             return App;
         }(react["Component"]);
-        var lib_src_app = app_App;
+        var entry_cachename_app_src_app = app_App;
         var taro_react = __webpack_require__(9);
         var config = {
             pages: [ "pages/index/index" ],
@@ -840,7 +882,7 @@ require("./taro");
             }
         };
         taro_runtime["window"].__taroAppConfig = config;
-        var inst = App(Object(taro["a"])(lib_src_app, react, taro_react["a"], config));
+        var inst = App(Object(taro["a"])(entry_cachename_app_src_app, react, taro_react["a"], config));
         Object(taro["initPxTransform"])({
             designWidth: 750,
             deviceRatio: {
@@ -909,7 +951,7 @@ require("./taro");
 </template>
 
 <template name="tmpl_0_6">
-  <text selectable="{{xs.b(i.p1,!1)}}" space="{{i.p2}}" decode="{{xs.b(i.p0,!1)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <text selectable="{{xs.b(i.p1,!1)}}" space="{{i.p2}}" decode="{{xs.b(i.p0,!1)}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -936,15 +978,15 @@ require("./taro");
   </cover-image>
 </template>
 
-<template name="tmpl_0_43">
+<template name="tmpl_0_44">
   <template is="{{xs.c(i, 'tmpl_0_')}}" data="{{i:i}}" />
 </template>
 
-<template name="tmpl_0_43_focus">
+<template name="tmpl_0_44_focus">
   <textarea value="{{i.p13}}" placeholder="{{i.p8}}" placeholder-style="{{i.p10}}" placeholder-class="{{xs.b(i.p9,'textarea-placeholder')}}" disabled="{{i.p4}}" maxlength="{{xs.b(i.p6,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" focus="{{xs.b(i.focus,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p5,!1)}}" cursor-spacing="{{xs.b(i.p3,0)}}" cursor="{{xs.b(i.p2,i.p13?i.p13.length:-1)}}" selection-start="{{xs.b(i.p12,-1)}}" selection-end="{{xs.b(i.p11,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p7}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
 </template>
 
-<template name="tmpl_0_43_blur">
+<template name="tmpl_0_44_blur">
   <textarea value="{{i.p13}}" placeholder="{{i.p8}}" placeholder-style="{{i.p10}}" placeholder-class="{{xs.b(i.p9,'textarea-placeholder')}}" disabled="{{i.p4}}" maxlength="{{xs.b(i.p6,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p5,!1)}}" cursor-spacing="{{xs.b(i.p3,0)}}" cursor="{{xs.b(i.p2,i.p13?i.p13.length:-1)}}" selection-start="{{xs.b(i.p12,-1)}}" selection-end="{{xs.b(i.p11,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p7}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
 </template>
 
@@ -956,7 +998,7 @@ require("./taro");
   </cover-view>
 </template>
 
-<template name="tmpl_0_36">
+<template name="tmpl_0_37">
   <scroll-view scroll-x="{{xs.b(i.p7,!1)}}" scroll-y="{{xs.b(i.p8,!1)}}" upper-threshold="{{xs.b(i.p9,50)}}" lower-threshold="{{xs.b(i.p2,50)}}" scroll-top="{{i.p5}}" scroll-left="{{i.p4}}" scroll-into-view="{{i.p3}}" scroll-with-animation="{{xs.b(i.p6,!1)}}" enable-back-to-top="{{xs.b(i.p1,!1)}}" onScrollToUpper="eh" onScrollToLower="eh" onScroll="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -964,7 +1006,7 @@ require("./taro");
   </scroll-view>
 </template>
 
-<template name="tmpl_0_40">
+<template name="tmpl_0_41">
   <swiper indicator-dots="{{xs.b(i.p7,!1)}}" indicator-color="{{xs.b(i.p6,'rgba(0, 0, 0, .3)')}}" indicator-active-color="{{xs.b(i.p5,'#000000')}}" autoplay="{{xs.b(i.p0,!1)}}" current="{{xs.b(i.p2,0)}}" interval="{{xs.b(i.p8,5000)}}" duration="{{xs.b(i.p4,500)}}" circular="{{xs.b(i.p1,!1)}}" vertical="{{xs.b(i.p11,!1)}}" previous-margin="{{xs.b(i.p10,'0px')}}" next-margin="{{xs.b(i.p9,'0px')}}" display-multiple-items="{{xs.b(i.p3,1)}}" onChange="eh" onTransition="eh" onAnimationFinish="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{xs.f(i.cn)}}" a:key="sid">
       <swiper-item class="{{item.cl}}" style="{{item.st}}" id="{{item.uid||item.sid}}" data-sid="{{item.sid}}">
@@ -992,7 +1034,7 @@ require("./taro");
   </image>
 </template>
 
-<template name="tmpl_0_44">
+<template name="tmpl_0_45">
   <video src="{{i.p20}}" duration="{{i.p6}}" controls="{{xs.b(i.p2,!0)}}" danmu-list="{{i.p4}}" danmu-btn="{{i.p3}}" enable-danmu="{{i.p7}}" autoplay="{{xs.b(i.p1,!1)}}" loop="{{xs.b(i.p10,!1)}}" muted="{{xs.b(i.p11,!1)}}" initial-time="{{xs.b(i.p9,0)}}" page-gesture="{{xs.b(i.p13,!1)}}" direction="{{i.p5}}" show-progress="{{xs.b(i.p19,!0)}}" show-fullscreen-btn="{{xs.b(i.p16,!0)}}" show-play-btn="{{xs.b(i.p18,!0)}}" show-center-play-btn="{{xs.b(i.p15,!0)}}" enable-progress-gesture="{{xs.b(i.p8,!0)}}" object-fit="{{xs.b(i.p12,'contain')}}" poster="{{i.p14}}" show-mute-btn="{{xs.b(i.p17,!1)}}" onPlay="eh" onPause="eh" onEnded="eh" onTimeUpdate="eh" onFullScreenChange="eh" onWaiting="eh" onError="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -1487,7 +1529,7 @@ export default {
     return 'tmpl_' + n + '_container'
   },
   f: function (l) {
-    return l.filter(function (i) {return i.nn === '41'})
+    return l.filter(function (i) {return i.nn === '42'})
   }
 }
 

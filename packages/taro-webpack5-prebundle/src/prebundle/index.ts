@@ -1,4 +1,4 @@
-import { chalk, fs, readConfig, recursiveMerge, REG_SCRIPTS, resolveMainFilePath, terminalLink } from '@tarojs/helper'
+import { chalk, defaultMainFields, fs, readConfig, recursiveMerge, REG_SCRIPTS, resolveMainFilePath, terminalLink } from '@tarojs/helper'
 import { PLATFORM_TYPE } from '@tarojs/shared'
 import path from 'path'
 import { performance } from 'perf_hooks'
@@ -29,6 +29,8 @@ export interface IPrebundleConfig {
   platformType: PLATFORM_TYPE
   sourceRoot: string
   isBuildPlugin?: boolean
+  alias?: Record<string, any>
+  defineConstants?: Record<string, any>
 }
 
 type TMode = 'production' | 'development' | 'none'
@@ -43,6 +45,7 @@ export default class BasePrebundle<T extends IPrebundleConfig = IPrebundleConfig
   env: string
   mode: TMode
   platformType: PLATFORM_TYPE
+  mainFields: string[]
   prebundleCacheDir: string
   remoteCacheDir: string
   metadataPath: string
@@ -75,6 +78,7 @@ export default class BasePrebundle<T extends IPrebundleConfig = IPrebundleConfig
     this.metadataPath = path.join(cacheDir, 'metadata.json')
     this.metadata = {}
     this.preMetadata = {}
+    this.mainFields = [...defaultMainFields]
 
     this.measure = getMeasure(this.option.timings)
 
@@ -134,7 +138,7 @@ export default class BasePrebundle<T extends IPrebundleConfig = IPrebundleConfig
 
     const appConfigPath = resolveMainFilePath(`${appJsPath.replace(path.extname(appJsPath), '')}.config`)
     if (fs.existsSync(appConfigPath)) {
-      const appConfig = readConfig(appConfigPath)
+      const appConfig = readConfig(appConfigPath, this.config)
 
       appConfig.pages.forEach((page: string) => {
         const pageJsPath = resolveMainFilePath(path.join(appPath, sourceRoot, page))
@@ -154,6 +158,7 @@ export default class BasePrebundle<T extends IPrebundleConfig = IPrebundleConfig
       entries,
       include,
       exclude,
+      mainFields: this.mainFields,
     }, this.deps)
 
     this.deps.size &&
@@ -182,6 +187,7 @@ export default class BasePrebundle<T extends IPrebundleConfig = IPrebundleConfig
           prebundleOutputDir: this.prebundleCacheDir,
           customEsbuildConfig: this.customEsbuildConfig,
           customSwcConfig: this.customSwcConfig,
+          mainFields: this.mainFields,
         })
       } catch (result) {
         return this.handleBundleError(result?.errors)
