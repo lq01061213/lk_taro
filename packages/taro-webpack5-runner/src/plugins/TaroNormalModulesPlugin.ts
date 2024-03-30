@@ -1,26 +1,15 @@
 import TaroSingleEntryDependency from '../dependencies/TaroSingleEntryDependency'
 import { componentConfig, componentNameSet, elementNameSet } from '../utils/component'
+import { isRenderNode } from './TaroComponentsExportsPlugin'
 import TaroNormalModule, { TaroBaseNormalModule } from './TaroNormalModule'
 
 import type { Func } from '@tarojs/taro/types/compile'
+import type AcornWalk from 'acorn-walk'
 import type { Compiler } from 'webpack'
 
-const walk = require('acorn-walk')
+const walk = require('acorn-walk') as typeof AcornWalk
 
 const PLUGIN_NAME = 'TaroNormalModulesPlugin'
-
-function isRenderNode (node, ancestors): boolean {
-  let renderFn
-  const hasRenderMethod = ancestors.some((ancestor) => {
-    if (ancestor.type === 'FunctionExpression' && ancestor?.id?.name === 'render') {
-      renderFn = ancestor.params[0]?.name
-      return true
-    } else {
-      return false
-    }
-  })
-  return hasRenderMethod && node.callee.name === renderFn
-}
 
 export default class TaroNormalModulesPlugin {
   isCache = true
@@ -54,7 +43,7 @@ export default class TaroNormalModulesPlugin {
         const dependency = dependencies[0]
         if (dependency instanceof TaroSingleEntryDependency) {
           return Promise.resolve(new TaroNormalModule(Object.assign(data,
-            { miniType: dependency.miniType, name: dependency.name }
+            { miniType: dependency.miniType, name: dependency.name, isNativePage: dependency.options.isNativePage }
           )))
         }
         return Promise.resolve(new TaroBaseNormalModule(data))
@@ -70,6 +59,7 @@ export default class TaroNormalModulesPlugin {
 
           walk.ancestor(ast, {
             CallExpression: (node, ancestors) => {
+              // @ts-ignore
               const callee = node.callee
 
               if (callee.type === 'MemberExpression') {
@@ -79,8 +69,8 @@ export default class TaroNormalModulesPlugin {
               } else {
                 const nameOfCallee = callee.name
                 if (
-                  // 兼容 react17 new jsx transtrom
-                  nameOfCallee !== '_jsx' && nameOfCallee !== '_jsxs' &&
+                  // 兼容 react17 new jsx transtrom 以及esbuild-loader的ast兼容问题
+                  !/^_?jsxs?$/.test(nameOfCallee) &&
                   // 兼容 Vue 3.0 渲染函数及 JSX
                   !(nameOfCallee && nameOfCallee.includes('createVNode')) &&
                   !(nameOfCallee && nameOfCallee.includes('createBlock')) &&
@@ -94,7 +84,12 @@ export default class TaroNormalModulesPlugin {
                 }
               }
 
+              // @ts-ignore
               const [type, prop] = node.arguments
+
+              // 防止 vue2 中类似 h() 的定义报错
+              if (!type) return
+
               const componentName = type.name
 
               if (type.value) {
@@ -118,12 +113,20 @@ export default class TaroNormalModulesPlugin {
                 return
               }
 
+              function getPropName (key): string {
+                return key.type === 'Identifier' ? key.name : (key.type === 'Literal' ? key.value : null)
+              }
+
               const props = prop.properties
-                .filter(p => p.type === 'Property' && p.key.type === 'Identifier' && p.key.name !== 'children' && p.key.name !== 'id')
-              const res = props.map(p => p.key.name).join('|')
-        
-              props.forEach(p => attrs.add(p.key.name))
-          
+                .filter(p => {
+                  if (p.type !== 'Property') return false
+
+                  const propName = getPropName(p.key)
+                  return propName && propName !== 'children' && propName !== 'id'
+                })
+              const res = props.map(p => getPropName(p.key)).join('|')
+              props.forEach(p => attrs.add(getPropName(p.key)))
+
               currentModule.collectProps[type.value] = res
             },
           })

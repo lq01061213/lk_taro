@@ -648,13 +648,22 @@ export function readPageConfig (configPath: string) {
   return result
 }
 
-export function readConfig (configPath: string) {
+interface IReadConfigOptions {
+  defineConstants?: Record<string, any>
+  alias?: Record<string, any>
+}
+
+export function readConfig<T extends IReadConfigOptions> (configPath: string, options: T = {} as T) {
   let result: any = {}
   if (fs.existsSync(configPath)) {
     if (REG_JSON.test(configPath)) {
       result = fs.readJSONSync(configPath)
     } else {
       result = requireWithEsbuild(configPath, {
+        customConfig: {
+          define: options.defineConstants || {},
+          alias: options.alias || {},
+        },
         customSwcConfig: {
           jsc: {
             parser: {
@@ -666,8 +675,7 @@ export function readConfig (configPath: string) {
             },
             experimental: {
               plugins: [
-                // Note: 更新 SWC 版本可能会使插件将箭头函数等代码错误抖动，导致配置读取错误
-                [path.resolve(__dirname, '../swc/plugin-define-config/target/wasm32-wasi/release/swc_plugin_define_config.wasm'), {}]
+                [path.resolve(__dirname, '../swc/swc_plugin_define_config.wasm'), {}]
               ]
             }
           },
