@@ -11,33 +11,27 @@ import type { IConfig } from './index'
 
 export function modifyH5WebpackChain (ctx: IPluginContext, chain, config: IConfig) {
   // vue3 tsx 使用原生组件
-  setStyleLoader(ctx, chain)
   setVueLoader(chain, config)
   setLoader(chain)
   setTaroApiLoader(chain)
 
   const { isBuildNativeComp = false } = ctx.runOpts?.options || {}
-  const externals: Record<string, string> = {}
+  const externals: Record<string, { [externalType: string]: string } | string> = {}
   if (isBuildNativeComp) {
     // Note: 该模式不支持 prebundle 优化，不必再处理
-    externals.vue = 'vue'
+    externals.vue = {
+      commonjs: 'vue',
+      commonjs2: 'vue',
+      amd: 'vue',
+      root: 'Vue'
+    }
+
+    chain.merge({
+      externalsType: 'umd'
+    })
   }
 
   chain.merge({ externals })
-}
-
-function setStyleLoader (ctx: IPluginContext, chain) {
-  const config = ctx.initialConfig.h5 || {}
-
-  const { styleLoaderOption = {} } = config
-  chain.module
-    .rule('customStyle')
-    .merge({
-      use: [{
-        loader: 'style-loader',
-        options: styleLoaderOption
-      }]
-    })
 }
 
 function setVueLoader (chain, config: IConfig) {
@@ -108,7 +102,7 @@ function setTaroApiLoader (chain) {
   chain.merge({
     module: {
       rule: {
-        'process-import-taro': {
+        'process-import-taro-h5': {
           test: /taro-h5[\\/]dist[\\/]api[\\/]taro/,
           loader: require.resolve('./api-loader')
         }
