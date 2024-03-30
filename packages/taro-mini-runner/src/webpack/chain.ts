@@ -392,19 +392,16 @@ export const getModule = (appPath: string, {
     }
   }
 
-  if (compile.exclude && compile.exclude.length) {
-    scriptRule.exclude = [
-      ...compile.exclude,
-      filename => /css-loader/.test(filename) || (/node_modules/.test(filename) && !(/taro/.test(filename)))
-    ]
-  } else if (compile.include && compile.include.length) {
-    scriptRule.include = [
-      ...compile.include,
-      sourceDir,
-      filename => /taro/.test(filename)
-    ]
-  } else {
-    scriptRule.exclude = [filename => /css-loader/.test(filename) || (/node_modules/.test(filename) && !(/taro/.test(filename)))]
+  scriptRule.include = [
+    sourceDir,
+    filename => /(?<=node_modules[\\/]).*taro/.test(filename)
+  ]
+  if (Array.isArray(compile.include)) {
+    scriptRule.include.unshift(...compile.include)
+  }
+
+  if (Array.isArray(compile.exclude)) {
+    scriptRule.exclude = [...compile.exclude]
   }
 
   const rule: Record<string, IRule> = {
@@ -433,8 +430,26 @@ export const getModule = (appPath: string, {
       test: REG_TEMPLATE,
       use: [getFileLoader([{
         useRelativePath: true,
-        name: (resourcePath) => {
-          return resourcePath.replace(path.join(sourceDir, '../'), '').replace(/node_modules/gi, 'npm')
+        name: (resourcePath: string) => {
+          // 差异点：
+          // webpack4 中的 resourcePath 是绝对路径
+          // webpack5 中的 filename 是相对于 appPath 的文件路径名称
+          // appPath /xxx/uuu/aaa
+          // sourceDir /xxx/uuu/aaa/bbb/ccc/src
+
+          // 因此在 webpack4 中如果包含 sourceDir，证明是在 src 内的路径
+          if (resourcePath.includes(sourceDir)) {
+            // 直接将 /xxx/src/yyy/zzz.wxml 转换成 yyy/zzz.wxml 即可
+            return resourcePath.replace(sourceDir + '/', '').replace(/node_modules/gi, 'npm')
+          } else {
+            // 否则，证明是外层，存在一下两种可能
+            // resourcePath /xxx/uuu/aaa/node_modules/yy/zzz.wxml
+            // --> result: npm/yy/zzz.wxml
+
+            // resourcePath /xxx/uuu/aaa/bbb/abc/yy/zzz.wxml
+            // --> result: bbb/abc/yy/zzz.wxml
+            return resourcePath.replace(appPath + '/', '').replace(/node_modules/gi, 'npm')
+          }
         },
         context: sourceDir
       }]), miniTemplateLoader]
@@ -444,7 +459,11 @@ export const getModule = (appPath: string, {
       use: [getFileLoader([{
         useRelativePath: true,
         name: (resourcePath) => {
-          return resourcePath.replace(path.join(sourceDir, '../'), '').replace(/node_modules/gi, 'npm')
+          if (resourcePath.includes(sourceDir)) {
+            return resourcePath.replace(sourceDir + '/', '').replace(/node_modules/gi, 'npm')
+          } else {
+            return resourcePath.replace(appPath + '/', '').replace(/node_modules/gi, 'npm')
+          }
         },
         context: sourceDir
       }]),
