@@ -69,7 +69,7 @@
     "mkdirp": "^1.0.4",
     "ora": "^5.0.0",
     "postcss-html-transform": "workspace:*",
-    "postcss-import": "^14.0.0",
+    "postcss-import": "^16.1.0",
     "postcss-loader": "^7.0.1",
     "postcss-plugin-constparse": "workspace:*",
     "postcss-pxtransform": "workspace:*",
