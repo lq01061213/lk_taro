@@ -3,6 +3,7 @@ import { defaults } from 'lodash'
 import path from 'path'
 
 import AppHelper from '../utils/app'
+import { componentConfig } from '../utils/component'
 import TaroComponentsExportsPlugin from './TaroComponentsExportsPlugin'
 
 import type { Func } from '@tarojs/taro/types/compile'
@@ -18,6 +19,8 @@ interface ITaroH5PluginOptions {
   framework: FRAMEWORK_MAP
   frameworkExts: string[]
   runtimePath: string[]
+  alias: Record<string, any>
+  defineConstants: Record<string, any>
   pxTransformConfig: {
     baseFontSize: number
     deviceRatio: any
@@ -56,7 +59,9 @@ export default class TaroH5Plugin {
         unitPrecision: 5,
         targetUnit: 'rem'
       },
-      prebundle: false
+      prebundle: false,
+      alias: {},
+      defineConstants: {},
     })
   }
 
@@ -132,6 +137,8 @@ export default class TaroH5Plugin {
               loaderMeta: this.options.loaderMeta,
               pages: pagesConfigList,
               pxTransformConfig: this.options.pxTransformConfig,
+              alias: this.options.alias,
+              defineConstants: this.options.defineConstants,
               /** building mode */
               bootstrap,
               isBuildNativeComp
@@ -143,7 +150,9 @@ export default class TaroH5Plugin {
       })
     })
 
-    new TaroComponentsExportsPlugin(this.options).apply(compiler)
+    if (!componentConfig.includeAll) {
+      new TaroComponentsExportsPlugin(this.options).apply(compiler)
+    }
   }
 
   run () {
