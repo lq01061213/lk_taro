@@ -31,7 +31,6 @@ export * from './constants'
 export { Current, getCurrentInstance } from './current'
 export { eventSource } from './dom/event-source'
 export {
-  addLeadingSlash,
   createComponentConfig,
   createPageConfig,
   createRecursiveComponentConfig,
@@ -49,7 +48,11 @@ export * from './emitter/emitter'
 export { hydrate } from './hydrate'
 export { nextTick } from './next-tick'
 export { options } from './options'
-export { incrementId } from './utils'
+export { incrementId, isHasExtractProp } from './utils'
+export * from './utils/router'
 // typings
 export * from './dsl/instance'
 export * from './interface'
+
+// Polyfills
+export * from './polyfill'
