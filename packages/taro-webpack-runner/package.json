@@ -1,13 +1,13 @@
 {
   "name": "@tarojs/webpack-runner",
-  "version": "3.6.13",
+  "version": "3.6.25",
   "description": "webpack runner for taro",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
     "test": "cross-env NODE_ENV=jest jest",
-    "test:ci": "cross-env NODE_ENV=jest jest --ci -i",
+    "test:ci": "cross-env NODE_ENV=jest jest --ci -i --coverage --silent",
     "test:dev": "cross-env NODE_ENV=jest jest --watch",
     "test:coverage": "cross-env NODE_ENV=jest jest --coverage",
     "updateSnapshot": "cross-env NODE_ENV=jest jest --updateSnapshot"
@@ -52,7 +52,7 @@
     "open": "7.0.2",
     "ora": "^5.0.0",
     "postcss-html-transform": "workspace:*",
-    "postcss-import": "12.0.1",
+    "postcss-import": "16.1.0",
     "postcss-loader": "4.3.0",
     "postcss-plugin-constparse": "workspace:*",
     "postcss-pxtransform": "workspace:*",
