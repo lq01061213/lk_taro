@@ -143,9 +143,10 @@ export function createRouter (
       if (currentPage !== stacks.getItem(prevIndex)) {
         handler.unload(currentPage, delta, prevIndex > -1)
         if (prevIndex > -1) {
-          eventCenter.once('__taroPageOnShowAfterDestroyed', () => {
-            handler.show(stacks.getItem(prevIndex), pageConfig, prevIndex)
-          })
+          handler.show(stacks.getItem(prevIndex), pageConfig, prevIndex)
+          // eventCenter.once('__taroPageOnShowAfterDestroyed', () => {
+          //   handler.show(stacks.getItem(prevIndex), pageConfig, prevIndex)
+          // })
         } else {
           shouldLoad = true
         }
